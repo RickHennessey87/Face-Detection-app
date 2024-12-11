@@ -5,16 +5,22 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition.js'
 import Logo from './components/Logo/Logo.js'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js'
 import Rank from './components/Rank/Rank.js'
+import SignIn from './components/SignIn/SignIn.js'
 import ParticlesComponent from './components/Particles/Particles.js';
 
 function App() {
   const [input, setInput] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [boxes, setBoxes] = useState([]);
+  const [route, setRoute] = useState('signin');
 
   const onInputChange = (event) => {
     setInput(event.target.value);
   }
+
+  const onRouteChange = (route) => {
+    setRoute(route);
+  };
 
   const calculateFaceLocations = (regions) => {
   const image = document.getElementById('inputimage');
@@ -70,14 +76,21 @@ function App() {
       .catch(error => console.log('error', error));
   }
 
+
   return (
     <div className="App">
       <ParticlesComponent id='tsparticles' />
-      <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm onInputChange={onInputChange} onButtonSubmit={onButtonSubmit} />
-      <FaceRecognition imageUrl={imageUrl} boxes={boxes} />
+      <Navigation onRouteChange={onRouteChange}/>
+      { route === 'signin' 
+        ? <SignIn onRouteChange={onRouteChange}/>
+        : 
+        <>
+          <Logo />
+          <Rank />
+          <ImageLinkForm onInputChange={onInputChange} onButtonSubmit={onButtonSubmit} />
+          <FaceRecognition imageUrl={imageUrl} boxes={boxes} />
+        </>
+      }
     </div>
   );
 }
